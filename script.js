@@ -34,17 +34,38 @@ const Game = (() => {
             cell.addEventListener("click", () => {
                 cell.textContent = "X";
                 cell.disabled = true;
+                
+                let randNum = generateRandomNumber();
+                let randCell = cells[randNum];
+
+                console.log(randNum);
+
+
+                // These lines don't work and produce infinite loop
+                if (randCell.textContent !== '') {
+                    while (randCell.textContent !== '') {
+                        generateRandomNumber();
+                        if (randCell.textContent === '') {
+                        randCell.textContent = "O";
+                        randCell.disabled = true;
+                    }
+                    }
+                } else {
+                    randCell.textContent = "O";
+                    randCell.disabled = true;
+                }
+                
             })
         })
     }
 
-    // Place mark
-    const placeMark = (event) => {
-        alert("Hello World")
-    }
-
-    return { startGame, placeMark }
+    return { startGame }
 })();
+
+
+function generateRandomNumber() {
+    return Math.floor(Math.random() * 9);
+}
 
 
 // Start game button
