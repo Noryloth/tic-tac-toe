@@ -5,14 +5,13 @@ const Gameboard = (() => {
     const showBoard = () => {
         let cellDiv = '';
         gameboard.forEach((cell, i) => {
-            cellDiv = document.createElement('div');
+            cellDiv = document.createElement('button');
             cellDiv.className = "cell";
             cellDiv.id = `cell-${i}`;
             cellDiv.textContent = `${cell}`;
 
-            document.querySelector('.gameboard').appendChild(cellDiv);
+            document.querySelector('.gameboard').appendChild(cellDiv);    
         });
-        
     }
 
     return { showBoard };
@@ -23,12 +22,28 @@ const Gameboard = (() => {
 const Game = (() => {
     let gameOver;
 
+    // Start game
     const startGame = () => {
         gameOver = false;
         Gameboard.showBoard();
+
+        // Place X on button press
+        const cells = document.querySelectorAll('.cell');
+
+        cells.forEach((cell) => {
+            cell.addEventListener("click", () => {
+                cell.textContent = "X";
+                cell.disabled = true;
+            })
+        })
     }
-    
-    return { startGame }
+
+    // Place mark
+    const placeMark = (event) => {
+        alert("Hello World")
+    }
+
+    return { startGame, placeMark }
 })();
 
 
