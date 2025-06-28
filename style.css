@@ -7,6 +7,12 @@
 }
 
 
+/* General */
+body {
+    cursor: default;
+}
+
+
 /* Heading */
 h1 {
     font-size: 3rem;
@@ -27,8 +33,11 @@ h1 {
 }
 
 .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid black;
-    cursor: default;
+    font-size: 12rem;
 }
 
 .cell:hover {
