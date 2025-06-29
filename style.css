@@ -17,7 +17,7 @@ body {
 h1 {
     font-size: 3rem;
     text-align: center;
-    margin: 2rem 0 2rem 0;
+    margin: 2rem 0 1rem 0;
 }
 
 
@@ -51,7 +51,15 @@ h1 {
     justify-content: center;
 }
 
-.start-button, .restart-button {
+input, .start-button, .restart-button {
     margin: 1rem;
     padding: 0.4rem 0.8rem;
+}
+
+
+/* Results */
+.results {
+    text-align: center;
+    margin: 1.5rem;
+    font-size: 1.2rem;
 }
