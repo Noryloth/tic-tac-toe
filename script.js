@@ -3,68 +3,114 @@ const Gameboard = (() => {
     let gameboard = ["", "", "", "", "", "", "", "", ""]
 
     const showBoard = () => {
-        let cellDiv = '';
+        let boardHTML = '';
         gameboard.forEach((cell, i) => {
-            cellDiv = document.createElement('button');
-            cellDiv.className = "cell";
-            cellDiv.id = `cell-${i}`;
-            cellDiv.textContent = `${cell}`;
-
-            document.querySelector('.gameboard').appendChild(cellDiv);    
+            boardHTML += `<div class="cell" id="cell-${i}">${cell}</div>` 
         });
+        document.querySelector('.gameboard').innerHTML = boardHTML;
+        
+        const cells = document.querySelectorAll('.cell');
+
+        cells.forEach((cell) => {
+            cell.addEventListener("click", Game.handleClick);
+        })
     }
 
-    return { showBoard };
+    const update = (index, value) => {
+        gameboard[index] = value;
+        showBoard();
+    };
+
+    const getGameboard = () => gameboard;
+
+    return { showBoard, update, getGameboard };
 })();
+
+
+const createPlayer = (name, mark) => {
+    return { name, mark }
+}
 
 
 // Game logic
 const Game = (() => {
     let gameOver;
+    let currentPlayerIndex;
+    let players = [];
 
     // Start game
     const startGame = () => {
+        players = [
+            createPlayer(document.getElementById('player1').value, "X"),
+            createPlayer(document.getElementById('player2').value, "O")
+        ]
+
+        currentPlayerIndex = 0;
         gameOver = false;
         Gameboard.showBoard();
-
-        // Place X on button press
-        const cells = document.querySelectorAll('.cell');
-
-        cells.forEach((cell) => {
-            cell.addEventListener("click", () => {
-                cell.textContent = "X";
-                cell.disabled = true;
-                
-                let randNum = generateRandomNumber();
-                let randCell = cells[randNum];
-
-                console.log(randNum);
-
-
-                // These lines don't work and produce infinite loop
-                if (randCell.textContent !== '') {
-                    while (randCell.textContent !== '') {
-                        generateRandomNumber();
-                        if (randCell.textContent === '') {
-                        randCell.textContent = "O";
-                        randCell.disabled = true;
-                    }
-                    }
-                } else {
-                    randCell.textContent = "O";
-                    randCell.disabled = true;
-                }
-                
-            })
-        })
     }
 
-    return { startGame }
+    // Handle click
+    const handleClick = (event) => {
+        if (gameOver) {
+            return;
+        }
+
+        let index = parseInt(event.target.id.split("-")[1]);
+    
+        if (Gameboard.getGameboard()[index] !== '')
+            return;
+
+        Gameboard.update(index, players[currentPlayerIndex].mark);
+        
+
+        // Check for win
+        if (checkForWin(Gameboard.getGameboard(), players[currentPlayerIndex].mark)) {
+            console.log(checkForWin(Gameboard.getGameboard()))
+            console.log(checkForTie(Gameboard.getGameboard()))
+            gameOver = true;
+            document.querySelector('.results').innerHTML = `<p>${players[currentPlayerIndex].name} won!</p>`;
+        } else if (checkForTie(Gameboard.getGameboard())) {
+            console.log(checkForWin(Gameboard.getGameboard()))
+            console.log(checkForTie(Gameboard.getGameboard()))
+            gameOver = true;
+            document.querySelector('.results').innerHTML = `<p>It's a tie!</p>`;
+        }
+
+        currentPlayerIndex = currentPlayerIndex === 0 ? 1 : 0;
+        
+    }
+
+    return { startGame, handleClick }
 })();
 
 
-function generateRandomNumber() {
-    return Math.floor(Math.random() * 9);
+// Win condition
+function checkForWin(board) {
+    const winningCombinations = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ]
+
+    for (let i = 0; i < winningCombinations.length; i++) {
+        const [a, b, c] = winningCombinations[i];
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// Tie condition
+function checkForTie(board) {
+    return board.every(cell => cell !== '');
 }
 
 
