@@ -62,17 +62,17 @@ const Game = (() => {
             return;
 
         Gameboard.update(index, players[currentPlayerIndex].mark);
-        
 
         // Check for win
         if (checkForWin(Gameboard.getGameboard(), players[currentPlayerIndex].mark)) {
-            console.log(checkForWin(Gameboard.getGameboard()))
-            console.log(checkForTie(Gameboard.getGameboard()))
             gameOver = true;
-            document.querySelector('.results').innerHTML = `<p>${players[currentPlayerIndex].name} won!</p>`;
+            if (players[currentPlayerIndex].name === '') {
+            document.querySelector('.results').innerHTML = `<p>Player ${currentPlayerIndex+1} won!</p>`;
+            } else {
+                document.querySelector('.results').innerHTML = `<p>${players[currentPlayerIndex].name} won!</p>`;
+            }
+            
         } else if (checkForTie(Gameboard.getGameboard())) {
-            console.log(checkForWin(Gameboard.getGameboard()))
-            console.log(checkForTie(Gameboard.getGameboard()))
             gameOver = true;
             document.querySelector('.results').innerHTML = `<p>It's a tie!</p>`;
         }
